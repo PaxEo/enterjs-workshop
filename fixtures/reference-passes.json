@@ -1,0 +1,163 @@
+{
+  "source": "heavens-above.com PassSummary, abgerufen 2026-10-18",
+  "observer": {
+    "lat": 50.94,
+    "lon": 6.96,
+    "heightM": 50
+  },
+  "noradId": 25544,
+  "passes": [
+    {
+      "visibleStart": "2026-10-18T03:42:46Z",
+      "visibleStartElevationDeg": 14,
+      "highest": "2026-10-18T03:43:41Z",
+      "highestElevationDeg": 15,
+      "visibleEnd": "2026-10-18T03:45:44Z",
+      "magnitude": -1.2
+    },
+    {
+      "visibleStart": "2026-10-18T05:16:38Z",
+      "visibleStartElevationDeg": 10,
+      "highest": "2026-10-18T05:19:59Z",
+      "highestElevationDeg": 56,
+      "visibleEnd": "2026-10-18T05:23:21Z",
+      "magnitude": -3.1
+    },
+    {
+      "visibleStart": "2026-10-19T04:30:39Z",
+      "visibleStartElevationDeg": 19,
+      "highest": "2026-10-19T04:32:40Z",
+      "highestElevationDeg": 42,
+      "visibleEnd": "2026-10-19T04:35:55Z",
+      "magnitude": -2.7
+    },
+    {
+      "visibleStart": "2026-10-20T03:45:26Z",
+      "visibleStartElevationDeg": 30,
+      "highest": "2026-10-20T03:45:26Z",
+      "highestElevationDeg": 30,
+      "visibleEnd": "2026-10-20T03:48:25Z",
+      "magnitude": -2.3
+    },
+    {
+      "visibleStart": "2026-10-20T05:18:34Z",
+      "visibleStartElevationDeg": 10,
+      "highest": "2026-10-20T05:21:59Z",
+      "highestElevationDeg": 88,
+      "visibleEnd": "2026-10-20T05:25:24Z",
+      "magnitude": -3.7
+    },
+    {
+      "visibleStart": "2026-10-21T03:00:07Z",
+      "visibleStartElevationDeg": 14,
+      "highest": "2026-10-21T03:00:07Z",
+      "highestElevationDeg": 14,
+      "visibleEnd": "2026-10-21T03:00:48Z",
+      "magnitude": -0.6
+    },
+    {
+      "visibleStart": "2026-10-21T04:33:06Z",
+      "visibleStartElevationDeg": 31,
+      "highest": "2026-10-21T04:34:35Z",
+      "highestElevationDeg": 73,
+      "visibleEnd": "2026-10-21T04:37:59Z",
+      "magnitude": -3.7
+    },
+    {
+      "visibleStart": "2026-10-22T03:47:43Z",
+      "visibleStartElevationDeg": 49,
+      "highest": "2026-10-22T03:47:43Z",
+      "highestElevationDeg": 49,
+      "visibleEnd": "2026-10-22T03:50:33Z",
+      "magnitude": -3
+    },
+    {
+      "visibleStart": "2026-10-22T05:20:41Z",
+      "visibleStartElevationDeg": 11,
+      "highest": "2026-10-22T05:24:00Z",
+      "highestElevationDeg": 77,
+      "visibleEnd": "2026-10-22T05:27:25Z",
+      "magnitude": -3.7
+    },
+    {
+      "visibleStart": "2026-10-23T03:02:16Z",
+      "visibleStartElevationDeg": 16,
+      "highest": "2026-10-23T03:02:16Z",
+      "highestElevationDeg": 16,
+      "visibleEnd": "2026-10-23T03:03:04Z",
+      "magnitude": -0.7
+    },
+    {
+      "visibleStart": "2026-10-23T04:35:15Z",
+      "visibleStartElevationDeg": 35,
+      "highest": "2026-10-23T04:36:32Z",
+      "highestElevationDeg": 82,
+      "visibleEnd": "2026-10-23T04:39:57Z",
+      "magnitude": -3.8
+    },
+    {
+      "visibleStart": "2026-10-24T03:49:46Z",
+      "visibleStartElevationDeg": 54,
+      "highest": "2026-10-24T03:49:46Z",
+      "highestElevationDeg": 54,
+      "visibleEnd": "2026-10-24T03:52:30Z",
+      "magnitude": -3.1
+    },
+    {
+      "visibleStart": "2026-10-24T05:22:44Z",
+      "visibleStartElevationDeg": 11,
+      "highest": "2026-10-24T05:25:58Z",
+      "highestElevationDeg": 83,
+      "visibleEnd": "2026-10-24T05:29:23Z",
+      "magnitude": -3.7
+    },
+    {
+      "visibleStart": "2026-10-25T03:04:15Z",
+      "visibleStartElevationDeg": 16,
+      "highest": "2026-10-25T03:04:15Z",
+      "highestElevationDeg": 16,
+      "visibleEnd": "2026-10-25T03:05:01Z",
+      "magnitude": -0.7
+    },
+    {
+      "visibleStart": "2026-10-25T04:37:13Z",
+      "visibleStartElevationDeg": 36,
+      "highest": "2026-10-25T04:38:28Z",
+      "highestElevationDeg": 78,
+      "visibleEnd": "2026-10-25T04:41:54Z",
+      "magnitude": -3.8
+    },
+    {
+      "visibleStart": "2026-10-26T03:51:41Z",
+      "visibleStartElevationDeg": 52,
+      "highest": "2026-10-26T03:51:41Z",
+      "highestElevationDeg": 52,
+      "visibleEnd": "2026-10-26T03:54:23Z",
+      "magnitude": -3
+    },
+    {
+      "visibleStart": "2026-10-26T05:24:39Z",
+      "visibleStartElevationDeg": 11,
+      "highest": "2026-10-26T05:27:50Z",
+      "highestElevationDeg": 72,
+      "visibleEnd": "2026-10-26T05:31:13Z",
+      "magnitude": -3.6
+    },
+    {
+      "visibleStart": "2026-10-27T03:06:10Z",
+      "visibleStartElevationDeg": 15,
+      "highest": "2026-10-27T03:06:10Z",
+      "highestElevationDeg": 15,
+      "visibleEnd": "2026-10-27T03:06:52Z",
+      "magnitude": -0.6
+    },
+    {
+      "visibleStart": "2026-10-27T04:39:08Z",
+      "visibleStartElevationDeg": 37,
+      "highest": "2026-10-27T04:40:20Z",
+      "highestElevationDeg": 87,
+      "visibleEnd": "2026-10-27T04:43:45Z",
+      "magnitude": -3.8
+    }
+  ]
+}
