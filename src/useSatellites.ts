@@ -31,7 +31,7 @@ export function useSatellites(groups: GroupId[]) {
     return [...byId.values()];
   }, [groups, loaded]);
 
-  const loading = groups.some((id) => !loaded[id]);
+  const loadingGroups = groups.filter((id) => !loaded[id]);
 
-  return { satellites, loading, error };
+  return { satellites, loadingGroups, error };
 }
