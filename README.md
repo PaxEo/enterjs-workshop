@@ -32,7 +32,7 @@ npm run check-setup
 | Pfad | Inhalt |
 | --- | --- |
 | `shared/` | Bahnlogik als reine Funktionen (Browser und Node) und gemeinsame Typen |
-| `server/` | Express-API: `/api/groups`, `/api/groups/:group`, `/api/satellites/:noradId` |
+| `server/` | Express-API: `/api/groups`, `/api/groups/:group`, `/api/satellites/:noradId`, `/api/passes` |
 | `src/` | React-Frontend: Globus, Satellitenliste, Detailansicht |
 | `data/` | Snapshot der CelesTrak-Bahndaten und Notizen zu einzelnen Satelliten |
 | `fixtures/` | eingefrorene Testdaten: ISS-Bahndaten und Referenzüberflüge über Köln von Heavens-Above |

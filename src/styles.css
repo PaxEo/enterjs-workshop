@@ -161,6 +161,50 @@ button:hover {
   background: var(--card);
 }
 
+.countdown {
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+.passes {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.passes button {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  color: var(--muted);
+  padding: 6px 4px;
+  text-align: left;
+}
+
+.passes button.visible {
+  color: var(--text);
+}
+
+.passes button:hover {
+  background: var(--card);
+}
+
+.badge {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--bg);
+  background: var(--ok);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+
 .drawer {
   position: absolute;
   right: 12px;

@@ -25,6 +25,8 @@ interface Props {
   satellites: Satellite[];
   selectedId: number | null;
   observer: Observer;
+  /** Neue Objektreferenz dreht den Globus zu diesem Punkt */
+  focus?: { lat: number; lon: number } | null;
   onSelect: (noradId: number) => void;
   onStats?: (stats: FrameStats) => void;
 }
@@ -36,7 +38,7 @@ interface Particle {
   alt: number;
 }
 
-export function GlobeView({ satellites, selectedId, observer, onSelect, onStats }: Props) {
+export function GlobeView({ satellites, selectedId, observer, focus, onSelect, onStats }: Props) {
   const clock = useClock();
   const containerRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<InstanceType<typeof Globe> | null>(null);
@@ -152,6 +154,10 @@ export function GlobeView({ satellites, selectedId, observer, onSelect, onStats 
   useEffect(() => {
     globeRef.current?.labelsData([{ lat: observer.lat, lng: observer.lon, text: 'Du' }]);
   }, [observer.lat, observer.lon]);
+
+  useEffect(() => {
+    if (focus) globeRef.current?.pointOfView({ lat: focus.lat, lng: focus.lon, altitude: 1.8 }, 1500);
+  }, [focus]);
 
   return <div ref={containerRef} className="globe" data-testid="globe" />;
 }

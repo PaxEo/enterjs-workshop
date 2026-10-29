@@ -5,6 +5,7 @@ import { DetailsDrawer } from './details/DetailsDrawer.tsx';
 import { type FrameStats, GlobeView } from './globe/GlobeView.tsx';
 import { GroupFilter } from './groups/GroupFilter.tsx';
 import { useGroupSelection } from './groups/useGroupSelection.ts';
+import { PassList } from './passes/PassList.tsx';
 import { SatelliteList } from './satellites/SatelliteList.tsx';
 import { TimeControls } from './TimeControls.tsx';
 import { useSatellites } from './useSatellites.ts';
@@ -15,6 +16,14 @@ export function App() {
   const { satellites, loadingGroups, error } = useSatellites(groups);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [stats, setStats] = useState<FrameStats | null>(null);
+  const [focus, setFocus] = useState<{ lat: number; lon: number } | null>(null);
+
+  // Ohne Auswahl hebt der Globus die ISS hervor und zeigt ihre Bahn
+  const showPass = () => {
+    setSelectedId(null);
+    if (!groups.includes('stations')) setGroups([...groups, 'stations']);
+    setFocus({ lat: DEFAULT_OBSERVER.lat, lon: DEFAULT_OBSERVER.lon });
+  };
 
   return (
     <ClockContext.Provider value={clock}>
@@ -24,6 +33,7 @@ export function App() {
             satellites={satellites}
             selectedId={selectedId}
             observer={DEFAULT_OBSERVER}
+            focus={focus}
             onSelect={setSelectedId}
             onStats={setStats}
           />
@@ -37,6 +47,7 @@ export function App() {
         <aside className="sidebar">
           <h1>Was fliegt da über uns?</h1>
           <TimeControls />
+          <PassList observer={DEFAULT_OBSERVER} onJump={showPass} />
           <GroupFilter selected={groups} loading={loadingGroups} onChange={setGroups} />
           {error && <p className="warn">Fehler beim Laden: {error}</p>}
           {groups.length === 0 ? (
