@@ -11,11 +11,11 @@ Voraussetzungen: Node.js ≥ 22, Git, [Claude Code](https://docs.claude.com/clau
 ```sh
 git clone <repo-url> sat-tracker
 cd sat-tracker
-npm install
+npm ci
 npm run check-setup
 ```
 
-`check-setup` prüft die Umgebung und legt eine `.env` an.
+`npm ci` installiert genau die Versionen aus `package-lock.json` und verändert die Datei nicht (anders als `npm install`, das sie je nach npm-Version umschreibt). `check-setup` prüft die Umgebung und legt eine `.env` an.
 
 ## Befehle
 
@@ -40,17 +40,21 @@ npm run check-setup
 
 ## Workshop-Stände
 
-Jeder Block endet auf einem Git-Tag. Wer den Anschluss verliert, springt mit `git checkout <tag>` zum Stand am Ende des Blocks:
+`step-0X` ist der Stand am Ende von Block X. Wer den Anschluss verliert, springt mit `git checkout <tag>` dorthin. Block 1 ändert nichts am Code und hat deshalb keinen eigenen Tag.
 
 | Tag | Stand |
 | --- | --- |
-| `step-00-start` | Ausgangslage |
-| `step-01-filter` | Gruppenfilter, Bugfix |
-| `step-02-passes` | ISS-Überflugvorhersage |
-| `step-03-setup` | Projektwissen, Skills, Hooks und Subagenten für Claude Code |
-| `step-04-mcp` | Playwright-MCP, Standortbestimmung, E2E-Tests |
-| `step-05-automation` | migrierte Panels, Headless-Skripte, parallele Features |
-| `final` | Endstand |
+| `step-00-start` | Ausgangslage, auch Stand nach Block 1 |
+| `step-02-kontext` | Elevations-Bug behoben |
+| `step-03-auftrag` | Gruppenfilter, ISS-Überflugvorhersage |
+| `step-04-spielraum` | Überflüge reviewt, Berechtigungsregeln |
+| `step-05-wissen` | CLAUDE.md, Rules, Skill, Suche über alle Satelliten |
+| `step-06-garantien` | Hooks, Subagenten |
+| `step-07-extern` | Playwright-MCP, Sicherheit |
+| `step-08-pipeline` | migrierte Panels, Headless-Skripte, Bahnlinien, Erinnerung |
+| `final` | Endstand mit Reservematerial (z. B. eigener MCP-Server) |
+
+Eigene Änderungen vorher sichern: `git stash -u`, danach `git checkout <tag>`.
 
 ## Datenquellen
 

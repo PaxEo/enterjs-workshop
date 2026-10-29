@@ -27,7 +27,7 @@ check('Claude Code', () => {
   }
 });
 check('Abhängigkeiten installiert', () => {
-  if (!existsSync('node_modules/.package-lock.json')) throw new Error('bitte `npm install` ausführen');
+  if (!existsSync('node_modules/.package-lock.json')) throw new Error('bitte `npm ci` ausführen');
   return 'ok';
 });
 check('Bahndaten vorhanden', () => {
