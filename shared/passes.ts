@@ -14,6 +14,9 @@ import { type Observer, type Satellite, elevationDeg } from './orbit.ts';
 
 const AU_KM = 149_597_870.7;
 
+/** So weit wird ein Überflug über den Zeitraum hinaus verfolgt; Überflüge im niedrigen Orbit dauern kürzer */
+const MAX_PASS_MS = 30 * 60_000;
+
 export interface Pass {
   start: string;
   max: string;
@@ -82,7 +85,14 @@ export function predictPasses(
     };
   };
 
-  for (let t = from.getTime(); t <= endMs; t += stepMs) {
+  const above = (ms: number) => (elevationDeg(sat, obs, new Date(ms)) ?? -90) >= minElevationDeg;
+
+  // Läuft zu Beginn schon ein Überflug, startet die Suche an seinem Anfang
+  let t = from.getTime();
+  while (t > from.getTime() - MAX_PASS_MS && above(t - stepMs)) t -= stepMs;
+
+  // Läuft am Ende noch ein Überflug, wird er bis zu seinem Ende verfolgt
+  for (; t <= endMs || (current !== null && t <= endMs + MAX_PASS_MS); t += stepMs) {
     const date = new Date(t);
     const el = elevationDeg(sat, obs, date);
     if (el === null) break; // Bahn zerfallen oder ungültig
@@ -102,6 +112,6 @@ export function predictPasses(
       current = null;
     }
   }
-  if (current) passes.push(close(current, endMs));
+  if (current) passes.push(close(current, t - stepMs));
   return passes;
 }

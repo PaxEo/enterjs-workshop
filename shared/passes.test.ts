@@ -79,4 +79,17 @@ describe('predictPasses', () => {
     const passes = predictPasses(iss, COLOGNE, epoch, { days: 3, minElevationDeg: 40 });
     expect(passes.every((p) => p.maxElevationDeg >= 40)).toBe(true);
   });
+
+  // Überflug am 18.10. 05:16:40–05:23:20, Höchststand 56° um 05:20
+  const wholePass = () => predictPasses(iss, COLOGNE, new Date('2026-10-18T05:00:00Z'), { days: 1 / 24 })[0];
+
+  it('erfasst einen Überflug vollständig, der zu Beginn schon läuft', () => {
+    const fromMidway = predictPasses(iss, COLOGNE, new Date('2026-10-18T05:21:00Z'), { days: 1 / 24 })[0];
+    expect(fromMidway).toEqual(wholePass());
+  });
+
+  it('verfolgt einen Überflug über das Ende des Zeitraums hinaus', () => {
+    const untilMidway = predictPasses(iss, COLOGNE, new Date('2026-10-18T05:00:00Z'), { days: 19 / 1440 }).at(-1);
+    expect(untilMidway).toEqual(wholePass());
+  });
 });
