@@ -1,36 +1,30 @@
-import { useEffect, useState } from 'react';
-import type { SatelliteDetails } from '../../../shared/api-types.ts';
+import { useSimTime } from '../../clock.ts';
+import { PanelState } from '../PanelState.tsx';
+import { useSatelliteDetails } from '../useSatelliteDetails.ts';
 
 const MAX_AGE_DAYS = 7;
 
 export function EpochPanel({ noradId }: { noradId: number }) {
-  const [epoch, setEpoch] = useState<string | null>(null);
-  const [ageDays, setAgeDays] = useState(0);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    fetch('/api/satellites/' + noradId)
-      .then((r) => r.json())
-      .then((d: SatelliteDetails) => {
-        setEpoch(d.orbit.epoch);
-        setAgeDays((Date.now() - new Date(d.orbit.epoch).getTime()) / 86_400_000);
-        setLoading(false);
-      });
-  }, [noradId]);
-
-  if (loading || !epoch) return <div className="panel-card">Lädt …</div>;
-
+  const now = useSimTime(60_000);
   return (
-    <div className="panel-card">
-      <h3>Bahndaten</h3>
-      <dl>
-        <dt>Epoche</dt>
-        <dd>{new Date(epoch).toLocaleString('de-DE')}</dd>
-        <dt>Alter</dt>
-        <dd className={ageDays > MAX_AGE_DAYS ? 'warn' : ''}>{ageDays.toFixed(1)} Tage</dd>
-      </dl>
-      {ageDays > MAX_AGE_DAYS && <p className="warn">Bahndaten sind veraltet, Positionen werden ungenau.</p>}
-    </div>
+    <PanelState query={useSatelliteDetails(noradId)}>
+      {(data) => {
+        const epoch = new Date(data.orbit.epoch);
+        const ageDays = (now.getTime() - epoch.getTime()) / 86_400_000;
+        const stale = ageDays > MAX_AGE_DAYS;
+        return (
+          <>
+            <h3>Bahndaten</h3>
+            <dl>
+              <dt>Epoche</dt>
+              <dd>{epoch.toLocaleString('de-DE')}</dd>
+              <dt>Alter</dt>
+              <dd className={stale ? 'warn' : ''}>{ageDays.toFixed(1)} Tage</dd>
+            </dl>
+            {stale && <p className="warn">Bahndaten sind veraltet, Positionen werden ungenau.</p>}
+          </>
+        );
+      }}
+    </PanelState>
   );
 }

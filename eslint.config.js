@@ -11,11 +11,7 @@ export default tseslint.config(
     files: ['src/**/*.{ts,tsx}'],
     languageOptions: { globals: globals.browser },
     plugins: { 'react-hooks': reactHooks },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-      // Altlast in den Info-Panels, wird im Workshop migriert
-      'react-hooks/set-state-in-effect': 'warn',
-    },
+    rules: reactHooks.configs.recommended.rules,
   },
   {
     files: ['server/**/*.ts', 'scripts/**/*.{ts,mjs}', 'shared/**/*.ts', '.claude/**/*.mjs', '*.config.{js,ts}'],

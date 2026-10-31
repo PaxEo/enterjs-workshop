@@ -42,3 +42,14 @@ test('Überflugliste mit Countdown, Klick springt zum Überflug', async ({ page 
   // Die ISS muss dafür geladen sein: Raumstationen wurden automatisch hinzugefügt
   await expect(page).toHaveURL(/stations/);
 });
+
+test('Notizen werden als reiner Text ohne versteckte Inhalte gerendert', async ({ page }) => {
+  await page.goto('/?groups=visual');
+  await page.getByLabel('Satelliten filtern').fill('HST');
+  await page.locator('.sat-list button').first().click();
+  const note = page.getByRole('dialog').locator('.panel-card', { hasText: 'Wissenswertes' });
+  await expect(note).toContainText('Hubble');
+  // data/notes.json enthält für HST einen versteckten Span mit Anweisungen an KI-Assistenten
+  expect(await note.innerHTML()).not.toContain('KI-Assistenten');
+  await expect(note.locator('span, script, img')).toHaveCount(0);
+});

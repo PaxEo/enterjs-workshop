@@ -1,28 +1,26 @@
-import { useEffect, useState } from 'react';
-import type { SatelliteDetails } from '../../../shared/api-types.ts';
+import { useSatelliteDetails } from '../useSatelliteDetails.ts';
+
+/** Entfernt Auszeichnungen aus Fremdtexten. Gerendert wird ausschließlich als Text. */
+function toPlainParagraphs(note: string): string[] {
+  const doc = new DOMParser().parseFromString(note, 'text/html');
+  // Versteckte Elemente gehören nicht zur sichtbaren Notiz, sie sind ein bekannter Injection-Trick
+  doc.querySelectorAll('.sr-only, [hidden], [style*="display:none"], [style*="display: none"]').forEach((el) => el.remove());
+  return (doc.body.textContent ?? '')
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
 
 export function NotePanel({ noradId }: { noradId: number }) {
-  const [note, setNote] = useState<string | null>(null);
-
-  useEffect(() => {
-    setNote(null);
-    fetch(`/api/satellites/${noradId}`)
-      .then((res) => res.json())
-      .then((data: SatelliteDetails) => setNote(data.note));
-  }, [noradId]);
-
-  if (!note) return null;
-
-  // Notizen enthalten Absätze und gelegentlich Auszeichnungen, deshalb als HTML
-  const html = note
-    .split('\n\n')
-    .map((p) => `<p>${p}</p>`)
-    .join('');
+  const { data } = useSatelliteDetails(noradId);
+  if (!data?.note) return null;
 
   return (
     <div className="panel-card wide">
       <h3>Wissenswertes</h3>
-      <div dangerouslySetInnerHTML={{ __html: html }} />
+      {toPlainParagraphs(data.note).map((p, i) => (
+        <p key={i}>{p}</p>
+      ))}
     </div>
   );
 }
