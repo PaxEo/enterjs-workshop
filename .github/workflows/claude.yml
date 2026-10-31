@@ -1,0 +1,62 @@
+# Claude Code in GitHub: reagiert auf @claude in Issues und PRs und reviewt neue Pull Requests.
+# Voraussetzung: Secret ANTHROPIC_API_KEY im Repository (Settings → Secrets and variables → Actions).
+# Vor dem Workshop gegen die aktuelle Doku von anthropics/claude-code-action prüfen.
+name: Claude
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  # @claude in einem Kommentar: Claude arbeitet den Auftrag ab
+  mention:
+    if: >
+      (github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment') &&
+      contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Projekt-Settings aus .claude/ gelten auch hier, inkl. Hooks
+          claude_args: --max-turns 30
+
+  # Automatisches Review jedes PRs: nur lesen und kommentieren, nichts ändern
+  review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Reviewe diesen Pull Request wie der Subagent in .claude/agents/reviewer.md:
+            Korrektheit (Einheiten Grad/Radiant, UTC, Randfälle), Tests gegen externe Referenzen,
+            Sicherheit (Fremddaten als HTML, fehlende Validierung), Konventionen aus CLAUDE.md.
+            Prüfe außerdem jede Änderung unter .claude/ und an .mcp.json besonders genau:
+            Hooks und MCP-Server führen beim nächsten Start Code auf den Rechnern des Teams aus.
+            Schreibe die Befunde als einen PR-Kommentar, schwerwiegendste zuerst.
+          claude_args: --max-turns 15 --allowedTools "Read,Grep,Glob,Bash(git diff:*),Bash(git log:*),Bash(gh pr comment:*)"

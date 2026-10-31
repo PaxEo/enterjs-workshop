@@ -23,7 +23,10 @@
     "tests:unlock": "node -e \"require('fs').rmSync('.claude/tests-locked',{force:true})\" && echo Tests entsperrt",
     "check-orbit": "tsx scripts/check-orbit.ts",
     "e2e": "playwright test",
-    "migrate:panels": "node scripts/migrate-panels.mjs"
+    "migrate:panels": "node scripts/migrate-panels.mjs",
+    "ai:changelog": "node scripts/changelog.mjs",
+    "ai:commit-msg": "git diff --staged | claude -p \"Schreib eine Commit-Nachricht für diesen Diff: Betreffzeile auf Deutsch, höchstens 72 Zeichen, danach optional Stichpunkte. Nur die Nachricht ausgeben.\" --max-turns 1",
+    "ai:review": "git diff main...HEAD | claude -p \"Reviewe diesen Diff nach .claude/agents/reviewer.md. Nur Befunde, schwerwiegendste zuerst.\" --allowedTools Read Grep Glob --max-turns 10"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.4",

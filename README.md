@@ -24,7 +24,13 @@ npm run check-setup
 | `npm run dev` | API (Port 3001) und Frontend (http://localhost:5173) starten |
 | `npm run stop` | hängengebliebene Server beenden (v. a. unter Windows) |
 | `npm run verify` | Typecheck, Lint und Tests mit knapper Ausgabe |
+| `npm run verify -- e2e` | zusätzlich die Playwright-Tests (braucht Chrome) |
 | `npm test` | nur die Tests (Vitest) |
+| `npm run check-orbit` | Bahnlogik gegen harte Grenzen und Heavens-Above-Referenz |
+| `npm run tests:lock` / `tests:unlock` | bestehende Tests für Claude sperren bzw. freigeben |
+| `npm run migrate:panels -- --dry-run` | Fan-out-Migration: ein headless Claude-Lauf pro Datei |
+| `npm run ai:changelog` | Changelog seit dem letzten Tag, strukturiert und mit Zod geprüft |
+| `npm run ai:commit-msg` / `ai:review` | Commit-Nachricht bzw. Review des Branch-Diffs per `claude -p` |
 | `npm run fetch-data -- --force` | Bahndaten-Snapshot neu laden (sparsam! siehe unten) |
 
 ## Aufbau
@@ -32,8 +38,12 @@ npm run check-setup
 | Pfad | Inhalt |
 | --- | --- |
 | `shared/` | Bahnlogik als reine Funktionen (Browser und Node) und gemeinsame Typen |
-| `server/` | Express-API: `/api/groups`, `/api/groups/:group`, `/api/satellites/:noradId`, `/api/passes` |
-| `src/` | React-Frontend: Globus, Satellitenliste, Detailansicht |
+| `server/` | Express-API: `/api/groups`, `/api/satellites`, `/api/passes` |
+| `src/` | React-Frontend: Globus, Gruppenfilter, Überflüge, Satellitenliste, Detailansicht |
+| `e2e/` | Playwright-Tests |
+| `.claude/` | Claude-Code-Konfiguration: Settings, Rules, Skills, Hooks, Subagenten |
+| `.github/` | CI und Claude Code in GitHub Actions |
+| `specs/`, `plans/` | Spezifikationen und Pläne aus dem Workshop |
 | `data/` | Snapshot der CelesTrak-Bahndaten und Notizen zu einzelnen Satelliten |
 | `fixtures/` | eingefrorene Testdaten: ISS-Bahndaten und Referenzüberflüge über Köln von Heavens-Above |
 | `scripts/` | Hilfsskripte für Setup, Prüfung und Daten |
