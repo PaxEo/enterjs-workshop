@@ -53,3 +53,12 @@ test('Notizen werden als reiner Text ohne versteckte Inhalte gerendert', async (
   expect(await note.innerHTML()).not.toContain('KI-Assistenten');
   await expect(note.locator('span, script, img')).toHaveCount(0);
 });
+
+test('Bahnen aller Satelliten lassen sich einblenden', async ({ page }) => {
+  await page.goto('/?groups=gps-ops');
+  const toggle = page.getByLabel('Bahnen aller Satelliten');
+  await expect(page.locator('.sat-list li')).toHaveCount(32);
+  await toggle.check();
+  await expect(toggle).toBeChecked();
+  await expect(page.getByLabel('Messwerte')).toContainText('FPS');
+});

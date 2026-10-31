@@ -2,7 +2,16 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { OMMJsonObject } from 'satellite.js';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { type Satellite, elevationDeg, speedKmS, splitAtDateLine, subPointAt, toSatellite } from './orbit.ts';
+import {
+  type Satellite,
+  elevationDeg,
+  orbitTrack,
+  periodMinutes,
+  speedKmS,
+  splitAtDateLine,
+  subPointAt,
+  toSatellite,
+} from './orbit.ts';
 
 const fixture = (name: string) =>
   JSON.parse(readFileSync(join(import.meta.dirname, '..', 'fixtures', name), 'utf8'));
@@ -57,6 +66,16 @@ describe('Elevation über dem Horizont', () => {
       expect(el).toBeGreaterThanOrEqual(-90);
       expect(el).toBeLessThanOrEqual(90);
     }
+  });
+});
+
+describe('orbitTrack', () => {
+  it('deckt bei der ISS genau einen Umlauf von ~93 min ab', () => {
+    expect(periodMinutes(iss)).toBeGreaterThan(92);
+    expect(periodMinutes(iss)).toBeLessThan(94);
+    const track = orbitTrack(iss, epoch);
+    expect(track.length).toBeGreaterThanOrEqual(100);
+    expect(track.length).toBeLessThanOrEqual(200);
   });
 });
 

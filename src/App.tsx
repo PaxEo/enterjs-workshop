@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { ClockContext, SimClock } from './clock.ts';
 import { DEFAULT_OBSERVER } from './config.ts';
 import { DetailsDrawer } from './details/DetailsDrawer.tsx';
-import { type FrameStats, GlobeView } from './globe/GlobeView.tsx';
+import { type FrameStats, GlobeView, MAX_TRACKS } from './globe/GlobeView.tsx';
 import { GroupFilter } from './groups/GroupFilter.tsx';
 import { useGroupSelection } from './groups/useGroupSelection.ts';
 import { PassList } from './passes/PassList.tsx';
@@ -16,6 +16,7 @@ export function App() {
   const { satellites, loadingGroups, error } = useSatellites(groups);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [stats, setStats] = useState<FrameStats | null>(null);
+  const [showAllTracks, setShowAllTracks] = useState(false);
   const [focus, setFocus] = useState<{ lat: number; lon: number } | null>(null);
 
   // Ohne Auswahl hebt der Globus die ISS hervor und zeigt ihre Bahn
@@ -34,6 +35,7 @@ export function App() {
             selectedId={selectedId}
             observer={DEFAULT_OBSERVER}
             focus={focus}
+            showAllTracks={showAllTracks}
             onSelect={setSelectedId}
             onStats={setStats}
           />
@@ -49,6 +51,13 @@ export function App() {
           <TimeControls />
           <PassList observer={DEFAULT_OBSERVER} onJump={showPass} />
           <GroupFilter selected={groups} loading={loadingGroups} onChange={setGroups} />
+          <label className="row">
+            <input type="checkbox" checked={showAllTracks} onChange={(e) => setShowAllTracks(e.target.checked)} />
+            <span>Bahnen aller Satelliten</span>
+            <span className="muted">
+              {satellites.length > MAX_TRACKS ? `nur bis ${MAX_TRACKS} Satelliten` : `${satellites.length}`}
+            </span>
+          </label>
           {error && <p className="warn">Fehler beim Laden: {error}</p>}
           {groups.length === 0 ? (
             <p className="muted">Keine Gruppe ausgewählt</p>
