@@ -1,7 +1,8 @@
 // Führt alle Prüfungen aus und gibt nur Fehler aus, möglichst knapp.
 // Das ist Absicht: Jede Zeile Ausgabe landet im Kontextfenster von Claude Code.
-// Aufruf: npm run verify            (alles)
-//         npm run verify -- test    (nur ausgewählte Prüfungen)
+// Aufruf: npm run verify                 (typecheck, lint, test)
+//         npm run verify -- test         (nur ausgewählte Prüfungen)
+//         npm run verify -- test e2e     (inkl. Playwright, braucht Chrome)
 import { spawnSync } from 'node:child_process';
 
 const MAX_LINES = 30;
@@ -53,13 +54,20 @@ const checks = {
     output.push(`${report.numPassedTests} bestanden, ${report.numFailedTests} fehlgeschlagen`);
     return { ok: r.status === 0, output };
   },
+  // Langsam und braucht einen Browser: nur auf ausdrücklichen Wunsch (`npm run verify -- e2e`)
+  e2e() {
+    const r = run('npx playwright test --reporter=line');
+    const output = lines(r.stdout + r.stderr).filter((l) => /^\s*(\d+\) |Error:|Expected|Received|\d+ (passed|failed|flaky))/.test(l));
+    return { ok: r.status === 0, output };
+  },
 };
+const OPT_IN = ['e2e'];
 
 const only = process.argv.slice(2);
 let failed = 0;
 
 for (const [name, check] of Object.entries(checks)) {
-  if (only.length && !only.includes(name)) continue;
+  if (only.length ? !only.includes(name) : OPT_IN.includes(name)) continue;
   const { ok, output } = check();
   if (ok) {
     console.log(`✓ ${name}`);

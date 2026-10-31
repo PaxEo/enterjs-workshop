@@ -12,7 +12,9 @@
       "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(node .claude/skills/new-endpoint/check-endpoint.mjs:*)",
-      "Bash(npm run check-orbit:*)"
+      "Bash(npm run check-orbit:*)",
+      "Bash(npm run e2e:*)",
+      "Bash(npx playwright test:*)"
     ],
     "ask": [
       "Bash(git push:*)",

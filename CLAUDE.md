@@ -6,6 +6,8 @@
 
 - `npm run verify` – Typecheck, Lint, Tests mit knapper Ausgabe. **Vor jedem „fertig“ ausführen.**
 - `npm run verify -- test` – nur Tests (auch `typecheck`, `lint`)
+- `npm run verify -- e2e` – Playwright-Tests in `e2e/` (langsam, startet bei Bedarf selbst den Dev-Server)
+- `npm run check-orbit` – Bahnlogik gegen harte Grenzen und Heavens-Above-Referenz
 - `npm run dev` startet API (:3001) und Frontend (:5173). Hängt ein Port, zuerst `npm run stop`.
 
 ## Struktur
