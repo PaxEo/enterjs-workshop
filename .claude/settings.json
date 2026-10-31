@@ -38,6 +38,15 @@
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/protect-tests.mjs\""
           }
         ]
+      },
+      {
+        "matcher": "mcp__playwright__browser_navigate",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/localhost-only.mjs\""
+          }
+        ]
       }
     ],
     "PostToolUse": [

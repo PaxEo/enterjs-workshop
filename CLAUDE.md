@@ -9,6 +9,7 @@
 - `npm run verify -- e2e` – Playwright-Tests in `e2e/` (langsam, startet bei Bedarf selbst den Dev-Server)
 - `npm run check-orbit` – Bahnlogik gegen harte Grenzen und Heavens-Above-Referenz
 - `npm run dev` startet API (:3001) und Frontend (:5173). Hängt ein Port, zuerst `npm run stop`.
+- UI-Änderungen mit dem Playwright-MCP im Browser prüfen. Den Globus (WebGL) nur per Screenshot, alles andere über den Accessibility-Snapshot.
 
 ## Struktur
 
