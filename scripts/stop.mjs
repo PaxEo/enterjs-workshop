@@ -1,5 +1,6 @@
 // Beendet Prozesse, die noch auf den Ports des Projekts lauschen.
 // Nötig vor allem unter Windows: Wird `npm run dev` hart beendet, laufen Vite und API oft weiter.
+// netstat ohne `-p tcp`, sonst fehlen IPv6-Sockets wie Vites [::1]:5173.
 import { execSync } from 'node:child_process';
 
 const PORTS = [3001, 5173];
@@ -7,7 +8,7 @@ const PORTS = [3001, 5173];
 function pidsOnPort(port) {
   try {
     if (process.platform === 'win32') {
-      const out = execSync(`netstat -ano -p tcp`, { encoding: 'utf8' });
+      const out = execSync('netstat -ano', { encoding: 'utf8' });
       return out
         .split('\n')
         .filter((line) => line.includes('LISTENING') && new RegExp(`[:.]${port}\\s`).test(line))
