@@ -10,7 +10,8 @@
       "Bash(npx vitest run:*)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(node .claude/skills/new-endpoint/check-endpoint.mjs:*)"
     ],
     "ask": [
       "Bash(git push:*)",
