@@ -14,7 +14,9 @@
       "Bash(node .claude/skills/new-endpoint/check-endpoint.mjs:*)",
       "Bash(npm run check-orbit:*)",
       "Bash(npm run e2e:*)",
-      "Bash(npx playwright test:*)"
+      "Bash(npx playwright test:*)",
+      "mcp__sat-tracker__next_passes",
+      "mcp__sat-tracker__find_satellite"
     ],
     "ask": [
       "Bash(git push:*)",

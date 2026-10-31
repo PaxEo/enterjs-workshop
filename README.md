@@ -31,6 +31,7 @@ npm run check-setup
 | `npm run migrate:panels -- --dry-run` | Fan-out-Migration: ein headless Claude-Lauf pro Datei |
 | `npm run ai:changelog` | Changelog seit dem letzten Tag, strukturiert und mit Zod geprüft |
 | `npm run ai:commit-msg` / `ai:review` | Commit-Nachricht bzw. Review des Branch-Diffs per `claude -p` |
+| `npx tsx mcp/satellites-server.ts` | eigener MCP-Server mit den Tools `next_passes` und `find_satellite` (in `.mcp.json` eingetragen) |
 | `npm run fetch-data -- --force` | Bahndaten-Snapshot neu laden (sparsam! siehe unten) |
 
 ## Aufbau
