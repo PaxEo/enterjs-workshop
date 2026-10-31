@@ -98,6 +98,18 @@ export function groundTrack(
   return points;
 }
 
+/** Umlaufzeit in Minuten aus der mittleren Bewegung des SGP4-Datensatzes (rad/min) */
+export function periodMinutes(sat: Satellite): number {
+  return (2 * Math.PI) / sat.satrec.no;
+}
+
+/** Bahnlinie über genau einen Umlauf, zentriert auf `center`, mit etwa 120 Punkten */
+export function orbitTrack(sat: Satellite, center: Date): SubPoint[] {
+  const period = periodMinutes(sat);
+  const stepSeconds = Math.max(30, Math.round((period * 60) / 120));
+  return groundTrack(sat, center, period / 2, period / 2, stepSeconds);
+}
+
 /** Bahnlinie an der Datumsgrenze auftrennen, sonst zieht der Globus eine Linie quer über die Erde */
 export function splitAtDateLine(points: SubPoint[]): SubPoint[][] {
   const segments: SubPoint[][] = [[]];

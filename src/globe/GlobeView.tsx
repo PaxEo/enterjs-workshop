@@ -5,7 +5,7 @@ import {
   type Observer,
   type Satellite,
   type SubPoint,
-  groundTrack,
+  orbitTrack,
   splitAtDateLine,
   subPointAt,
 } from '../../shared/orbit.ts';
@@ -27,6 +27,8 @@ interface Props {
   observer: Observer;
   /** Neue Objektreferenz dreht den Globus zu diesem Punkt */
   focus?: { lat: number; lon: number } | null;
+  /** Bahnlinien für alle Satelliten statt nur für den hervorgehobenen (bis MAX_TRACKS) */
+  showAllTracks?: boolean;
   onSelect: (noradId: number) => void;
   onStats?: (stats: FrameStats) => void;
 }
@@ -38,15 +40,31 @@ interface Particle {
   alt: number;
 }
 
-export function GlobeView({ satellites, selectedId, observer, focus, onSelect, onStats }: Props) {
+interface Track {
+  points: SubPoint[];
+  focus: boolean;
+}
+
+/** Mehr Bahnlinien werden unübersichtlich und kosten spürbar Rechenzeit */
+export const MAX_TRACKS = 100;
+
+export function GlobeView({
+  satellites,
+  selectedId,
+  observer,
+  focus,
+  showAllTracks = false,
+  onSelect,
+  onStats,
+}: Props) {
   const clock = useClock();
   const containerRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<InstanceType<typeof Globe> | null>(null);
 
   // Aktuelle Props für die Update-Schleife, ohne sie bei jeder Änderung neu zu starten
-  const live = useRef({ satellites, selectedId, onSelect, onStats });
+  const live = useRef({ satellites, selectedId, showAllTracks, onSelect, onStats });
   useEffect(() => {
-    live.current = { satellites, selectedId, onSelect, onStats };
+    live.current = { satellites, selectedId, showAllTracks, onSelect, onStats };
   });
 
   useEffect(() => {
@@ -68,8 +86,8 @@ export function GlobeView({ satellites, selectedId, observer, focus, onSelect, o
       .pathPointLat('lat')
       .pathPointLng('lon')
       .pathPointAlt((p: SubPoint) => p.altKm / EARTH_RADIUS_KM)
-      .pathColor(() => 'rgba(255, 140, 90, 0.9)')
-      .pathStroke(1.5)
+      .pathColor((t: object) => ((t as Track).focus ? 'rgba(255, 140, 90, 0.9)' : 'rgba(152, 251, 152, 0.3)'))
+      .pathStroke((t: object) => ((t as Track).focus ? 1.5 : 0.6))
       .pathTransitionDuration(0)
       .labelLat('lat')
       .labelLng('lng')
@@ -91,14 +109,14 @@ export function GlobeView({ satellites, selectedId, observer, focus, onSelect, o
     };
     raf = requestAnimationFrame(countFrame);
 
-    let trackFor: number | null = null;
+    let trackKey = '';
     let trackAt = 0;
     let propSum = 0;
     let updates = 0;
     let rendered = 0;
 
     const update = () => {
-      const { satellites: sats, selectedId: selected } = live.current;
+      const { satellites: sats, selectedId: selected, showAllTracks: allTracks } = live.current;
       const focusId = selected ?? ISS_NORAD_ID;
       const now = clock.now();
 
@@ -123,13 +141,17 @@ export function GlobeView({ satellites, selectedId, observer, focus, onSelect, o
 
       globe.particlesData([others, highlight]);
 
-      if (focusSat && (trackFor !== focusId || Math.abs(now.getTime() - trackAt) > TRACK_REFRESH_SIM_MS)) {
-        globe.pathsData(splitAtDateLine(groundTrack(focusSat, now)).map((points) => ({ points })));
-        trackFor = focusId;
+      // Bahnlinien nur neu berechnen, wenn sich die Auswahl ändert oder die Simulationszeit weiterläuft
+      const withTracks = allTracks && sats.length <= MAX_TRACKS ? sats : focusSat ? [focusSat] : [];
+      const key = `${focusId}:${withTracks.length}:${allTracks}`;
+      if (key !== trackKey || Math.abs(now.getTime() - trackAt) > TRACK_REFRESH_SIM_MS) {
+        const tracks: Track[] = withTracks.flatMap((s) =>
+          splitAtDateLine(orbitTrack(s, now)).map((points) => ({ points, focus: s.noradId === focusId })),
+        );
+        // Hervorgehobene Bahn zuletzt zeichnen, damit sie oben liegt
+        globe.pathsData(tracks.sort((a, b) => Number(a.focus) - Number(b.focus)));
+        trackKey = key;
         trackAt = now.getTime();
-      } else if (!focusSat && trackFor !== null) {
-        globe.pathsData([]);
-        trackFor = null;
       }
     };
     const updateTimer = setInterval(update, UPDATE_INTERVAL_MS);
