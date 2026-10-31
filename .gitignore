@@ -7,3 +7,5 @@ test-results/
 .claude/settings.local.json
 CLAUDE.local.md
 .claude/tests-locked
+.claude/tmp/
+migration-report.json

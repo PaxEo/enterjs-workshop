@@ -22,7 +22,8 @@
     "tests:lock": "node -e \"require('fs').writeFileSync('.claude/tests-locked','')\" && echo Tests gesperrt",
     "tests:unlock": "node -e \"require('fs').rmSync('.claude/tests-locked',{force:true})\" && echo Tests entsperrt",
     "check-orbit": "tsx scripts/check-orbit.ts",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "migrate:panels": "node scripts/migrate-panels.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.4",
