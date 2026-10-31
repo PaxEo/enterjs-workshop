@@ -1,5 +1,10 @@
 import type { OMMJsonObject } from 'satellite.js';
-import type { GroupInfo, PassesResponse, SatelliteSearchResponse } from '../shared/api-types.ts';
+import type {
+  GroupInfo,
+  PassesResponse,
+  SatelliteDetails,
+  SatelliteSearchResponse,
+} from '../shared/api-types.ts';
 import type { GroupId } from '../shared/groups.ts';
 
 async function getJson<T>(url: string): Promise<T> {
@@ -12,6 +17,9 @@ async function getJson<T>(url: string): Promise<T> {
 export const fetchGroups = () => getJson<GroupInfo[]>('/api/groups');
 
 export const fetchGroup = (id: GroupId) => getJson<OMMJsonObject[]>(`/api/groups/${id}`);
+
+export const fetchSatelliteDetails = (noradId: number) =>
+  getJson<SatelliteDetails>(`/api/satellites/${noradId}`);
 
 export const searchSatellites = (q: string, limit = 20) =>
   getJson<SatelliteSearchResponse>(`/api/satellites/search?q=${encodeURIComponent(q)}&limit=${limit}`);
