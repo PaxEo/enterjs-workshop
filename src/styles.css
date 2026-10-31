@@ -205,6 +205,13 @@ button:hover {
   padding: 1px 8px;
 }
 
+button.link {
+  border: none;
+  background: none;
+  color: var(--accent);
+  padding: 6px 0;
+}
+
 .drawer {
   position: absolute;
   right: 12px;
