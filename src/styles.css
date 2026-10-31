@@ -196,6 +196,24 @@ button:hover {
   background: var(--card);
 }
 
+.toast {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 6px 0;
+  padding: 8px 10px;
+  border: 1px solid var(--ok);
+  border-radius: 8px;
+  background: rgba(126, 226, 168, 0.12);
+}
+
+.toast button {
+  margin-left: auto;
+  border: none;
+  background: none;
+  padding: 0 4px;
+}
+
 .badge {
   margin-left: auto;
   font-size: 11px;

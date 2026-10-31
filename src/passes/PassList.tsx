@@ -5,11 +5,14 @@ import type { Pass } from '../../shared/passes.ts';
 import { fetchPasses } from '../api.ts';
 import { useClock, useSimTime } from '../clock.ts';
 import { formatCountdown, formatPassTime, nextVisiblePass } from './format.ts';
+import { usePassReminder } from './usePassReminder.ts';
 
 interface Props {
   observer: Observer & { label: string };
   onJump: (pass: Pass) => void;
 }
+
+const NO_PASSES: Pass[] = [];
 
 export function PassList({ observer, onJump }: Props) {
   const clock = useClock();
@@ -35,6 +38,7 @@ export function PassList({ observer, onJump }: Props) {
     onJump(pass);
   };
 
+  const reminder = usePassReminder(result?.passes ?? NO_PASSES);
   const next = result && nextVisiblePass(result.passes, now);
   const shown = result?.passes.filter((p) => !onlyVisible || p.visible) ?? [];
 
@@ -54,6 +58,18 @@ export function PassList({ observer, onJump }: Props) {
             <input type="checkbox" checked={onlyVisible} onChange={(e) => setOnlyVisible(e.target.checked)} />
             <span>Nur sichtbare</span>
           </label>
+          <label className="row">
+            <input type="checkbox" checked={reminder.enabled} onChange={(e) => reminder.enable(e.target.checked)} />
+            <span>10 min vorher erinnern</span>
+          </label>
+          {reminder.message && (
+            <div className="toast" role="status">
+              <span>{reminder.message}</span>
+              <button onClick={reminder.dismiss} aria-label="Erinnerung schließen">
+                ×
+              </button>
+            </div>
+          )}
           <ul className="passes">
             {shown.map((p) => (
               <li key={p.start}>

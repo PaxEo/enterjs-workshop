@@ -62,3 +62,14 @@ test('Bahnen aller Satelliten lassen sich einblenden', async ({ page }) => {
   await expect(toggle).toBeChecked();
   await expect(page.getByLabel('Messwerte')).toContainText('FPS');
 });
+
+test('erinnert vor einem sichtbaren Überflug', async ({ page }) => {
+  await page.goto('/?groups=stations');
+  const passes = page.getByRole('region', { name: 'ISS-Überflüge' });
+  await passes.getByLabel('10 min vorher erinnern').check();
+  // Sprung landet eine Minute vor dem sichtbaren Abschnitt, also innerhalb der Vorlaufzeit
+  await passes.locator('.passes button').first().click();
+  await expect(passes.getByRole('status')).toContainText('ISS-Überflug');
+  await passes.getByRole('button', { name: 'Erinnerung schließen' }).click();
+  await expect(passes.getByRole('status')).toBeHidden();
+});
