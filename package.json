@@ -18,7 +18,9 @@
     "test": "vitest run",
     "verify": "node scripts/verify.mjs",
     "check-setup": "node scripts/check-setup.mjs",
-    "fetch-data": "tsx scripts/fetch-data.ts"
+    "fetch-data": "tsx scripts/fetch-data.ts",
+    "tests:lock": "node -e \"require('fs').writeFileSync('.claude/tests-locked','')\" && echo Tests gesperrt",
+    "tests:unlock": "node -e \"require('fs').rmSync('.claude/tests-locked',{force:true})\" && echo Tests entsperrt"
   },
   "dependencies": {
     "express": "^5.3.0",

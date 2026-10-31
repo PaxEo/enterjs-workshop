@@ -24,5 +24,18 @@
       "WebFetch(domain:celestrak.org)",
       "Bash(npm run fetch-data:*)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/protect-tests.mjs\""
+          }
+        ]
+      }
+    ]
   }
 }
