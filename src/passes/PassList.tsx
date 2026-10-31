@@ -28,8 +28,10 @@ export function PassList({ observer, onJump }: Props) {
     };
   }, [observer.lat, observer.lon]);
 
+  // Eine Minute vor dem sichtbaren Abschnitt landen, sonst vor dem Überflug selbst
   const jump = (pass: Pass) => {
-    clock.jumpTo(new Date(new Date(pass.start).getTime() - 60_000));
+    const target = pass.visible?.start ?? pass.start;
+    clock.jumpTo(new Date(new Date(target).getTime() - 60_000));
     onJump(pass);
   };
 
