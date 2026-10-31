@@ -21,6 +21,13 @@ export interface SatelliteDetails {
   note: string | null;
 }
 
+export interface SatelliteSearchResponse {
+  query: string;
+  /** Anzahl aller Treffer, auch über `limit` hinaus */
+  total: number;
+  results: { noradId: number; name: string; groups: GroupId[] }[];
+}
+
 export interface PassesResponse {
   noradId: number;
   name: string;
