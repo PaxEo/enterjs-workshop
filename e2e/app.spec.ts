@@ -53,3 +53,14 @@ test('Notizen werden als reiner Text ohne versteckte Inhalte gerendert', async (
   expect(await note.innerHTML()).not.toContain('KI-Assistenten');
   await expect(note.locator('span, script, img')).toHaveCount(0);
 });
+
+test('erinnert vor einem sichtbaren Überflug', async ({ page }) => {
+  await page.goto('/?groups=stations');
+  const passes = page.getByRole('region', { name: 'ISS-Überflüge' });
+  await passes.getByLabel('10 min vorher erinnern').check();
+  // Sprung landet eine Minute vor dem sichtbaren Abschnitt, also innerhalb der Vorlaufzeit
+  await passes.locator('.passes button').first().click();
+  await expect(passes.getByRole('status')).toContainText('ISS-Überflug');
+  await passes.getByRole('button', { name: 'Erinnerung schließen' }).click();
+  await expect(passes.getByRole('status')).toBeHidden();
+});
