@@ -238,3 +238,11 @@ button:hover {
     height: auto;
   }
 }
+
+.chip.loading {
+  opacity: 0.7;
+}
+
+.chip.error {
+  border-color: #e05a5a;
+}

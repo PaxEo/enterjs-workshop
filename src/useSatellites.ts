@@ -2,11 +2,17 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { GroupId } from '../shared/groups.ts';
 import { type Satellite, toSatellite } from '../shared/orbit.ts';
 import { fetchGroup } from './api.ts';
+import { unionSatellites } from './groupFilter.ts';
 
-/** Lädt die Bahndaten der angegebenen Gruppen (jede Gruppe nur einmal) und liefert sie ohne Duplikate */
+export type GroupStatus = 'loading' | 'loaded' | 'error';
+
+/**
+ * Lädt die Bahndaten der angegebenen Gruppen (jede Gruppe nur einmal, danach gecacht)
+ * und liefert ihre Vereinigung ohne Duplikate. Eine fehlgeschlagene Gruppe wird bei erneuter Aktivierung neu geladen.
+ */
 export function useSatellites(groups: GroupId[]) {
   const [loaded, setLoaded] = useState<Partial<Record<GroupId, Satellite[]>>>({});
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Partial<Record<GroupId, string>>>({});
   const requested = useRef(new Set<GroupId>());
 
   useEffect(() => {
@@ -19,19 +25,25 @@ export function useSatellites(groups: GroupId[]) {
           setLoaded((l) => ({ ...l, [id]: sats }));
         })
         .catch((err: Error) => {
-          requested.current.delete(id);
-          setError(err.message);
+          setErrors((e) => ({ ...e, [id]: err.message }));
         });
     }
   }, [groups]);
 
-  const satellites = useMemo(() => {
-    const byId = new Map<number, Satellite>();
-    for (const id of groups) for (const s of loaded[id] ?? []) byId.set(s.noradId, s);
-    return [...byId.values()];
-  }, [groups, loaded]);
+  /** Beim Abwählen aufrufen: eine fehlgeschlagene Gruppe wird bei erneuter Aktivierung neu geladen */
+  const release = (id: GroupId) => {
+    if (errors[id] === undefined) return;
+    requested.current.delete(id);
+    setErrors((e) => Object.fromEntries(Object.entries(e).filter(([key]) => key !== id)));
+  };
 
-  const loading = groups.some((id) => !loaded[id]);
+  const satellites = useMemo(() => unionSatellites(groups, loaded), [groups, loaded]);
 
-  return { satellites, loading, error };
+  const status = (id: GroupId): GroupStatus | undefined =>
+    loaded[id] ? 'loaded' : errors[id] !== undefined ? 'error' : groups.includes(id) ? 'loading' : undefined;
+
+  const loading = groups.some((id) => status(id) === 'loading');
+  const error = groups.map((id) => errors[id]).find((e) => e !== undefined) ?? null;
+
+  return { satellites, loaded, status, loading, error, release };
 }

@@ -5,4 +5,4 @@ import type { Observer } from '../shared/orbit.ts';
 export const DEFAULT_GROUPS: GroupId[] = ['stations', 'visual'];
 
 /** Beobachter-Standort, solange keine Ortung möglich ist */
-export const DEFAULT_OBSERVER: Observer & { label: string } = { lat: 50.94, lon: 6.96, label: 'Köln' };
+export const DEFAULT_OBSERVER: Observer & { label: string } = { lat: 49.74, lon: 9.84, label: 'Kist' };

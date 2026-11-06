@@ -5,12 +5,24 @@ import { DetailsDrawer } from './details/DetailsDrawer.tsx';
 import { type FrameStats, GlobeView } from './globe/GlobeView.tsx';
 import { SatelliteList } from './satellites/SatelliteList.tsx';
 import { TimeControls } from './TimeControls.tsx';
+import { GroupFilter } from './satellites/GroupFilter.tsx';
+import { hasLargeGroup, selectionAfterChange } from './groupFilter.ts';
+import type { GroupId } from '../shared/groups.ts';
+import { useGroupCounts, useGroupSelection } from './useGroupSelection.ts';
 import { useSatellites } from './useSatellites.ts';
 
 export function App() {
   const clock = useMemo(() => new SimClock(), []);
-  const { satellites, loading, error } = useSatellites(DEFAULT_GROUPS);
+  const { groups, toggle } = useGroupSelection(DEFAULT_GROUPS);
+  const counts = useGroupCounts();
+  const { satellites, loaded, status, loading, error, release } = useSatellites(groups);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const toggleGroup = (id: GroupId) => {
+    const next = toggle(id);
+    if (!next.includes(id)) release(id);
+    setSelectedId((current) => selectionAfterChange(current, next, loaded));
+  };
   const [stats, setStats] = useState<FrameStats | null>(null);
 
   return (
@@ -34,8 +46,13 @@ export function App() {
         <aside className="sidebar">
           <h1>Was fliegt da über uns?</h1>
           <TimeControls />
+          <GroupFilter active={groups} counts={counts} status={status} onToggle={toggleGroup} />
+          {hasLargeGroup(groups, counts) && (
+            <p className="warn">Viele Satelliten: Laden und Darstellung können ruckeln.</p>
+          )}
           {error && <p className="warn">Fehler beim Laden: {error}</p>}
           {loading && <p className="muted">Lade Bahndaten …</p>}
+          {groups.length === 0 && <p className="muted">Keine Gruppe gewählt</p>}
           <SatelliteList satellites={satellites} selectedId={selectedId} onSelect={setSelectedId} />
         </aside>
       </div>

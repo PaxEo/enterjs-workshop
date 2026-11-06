@@ -12,6 +12,7 @@ import {
   gstime,
   json2satrec,
   propagate,
+  radiansToDegrees,
 } from 'satellite.js';
 
 export interface Satellite {
@@ -76,7 +77,8 @@ export function elevationDeg(sat: Satellite, obs: Observer, date: Date): number 
   const pv = stateAt(sat, date);
   if (!pv) return null;
   const look = ecfToLookAngles(observerGd(obs), eciToEcf(pv.position, gstime(date)));
-  return look.elevation;
+  // satellite.js liefert die Elevation in Radiant
+  return radiansToDegrees(look.elevation);
 }
 
 /** Bahn als Liste von Unterpunkten, z. B. für die Bahnlinie auf dem Globus */
